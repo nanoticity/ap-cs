@@ -66,7 +66,7 @@ public class FormulasCalculator {
         System.out.println("Enter the height");
         heightCone = scan.nextDouble();
 
-        double volume = Math.PI * Math.pow(radiusCone, 2) * heightCone;
+        double volume = (1.0 / 3.0) * Math.PI * Math.pow(radiusCone, 2) * heightCone;
         System.out.println("volume: " + volume);
     }
 
