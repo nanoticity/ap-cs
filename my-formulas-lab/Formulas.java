@@ -7,7 +7,7 @@ public class Formulas {
     private double PI = 3.14;
 
     public int displayMenu() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 50; i++) {
             System.out.println("\n");
         }
         System.out.println("0. Quit");
@@ -204,7 +204,7 @@ public class Formulas {
     // If this looks suspicious, I already coded this once in python
     // for my coding 3 class in middle school, and just adapted it to java for this class.
 
-    private double GCDRecursive(double a, double b) {
+    private int GCDRecursive(int a, int b) {
         if (b == 0.0) {
             return a;
         }
@@ -215,10 +215,10 @@ public class Formulas {
     public void GCD() {
         System.out.println("\n13. Greatest common divisor");
         System.out.println("\nEnter the first number:");
-        double a = scan.nextDouble();
+        int a = scan.nextInt();
         System.out.println("\nEnter the second number:");
-        double b = scan.nextDouble();
-        double gcd = GCDRecursive(a, b);
+        int b = scan.nextInt();
+        int gcd = GCDRecursive(a, b);
         System.out.println("\n\nThe greatest common divisor is " + gcd);
     }
 
