@@ -55,6 +55,15 @@ public class Scenery extends JPanel {
 		g.setColor(colorGreen);
 		g.fillOval(525, 250, 200, 200);
 
+		// Cloud 1
+		Color colorWhite = new Color(255, 255, 255);
+		g.setColor(colorWhite);
+		g.fillOval(500, 200, 100, 50);
+
+		// Cloud 2
+		g.setColor(colorWhite);
+		g.fillOval(400, 100, 100, 50);
+
 		// Sun
 		Color colorYellow = new Color(255, 255, 0);
 		g.setColor(colorYellow);
