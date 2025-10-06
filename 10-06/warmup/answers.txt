@@ -1,0 +1,4 @@
+Return types are the type of the information the method returns. Ex. when you write "return 1;" then in the function decleration you have to add "public int myVoid() {}"
+You can return the information that you calculate in your variable. For example, you can give something back to the code.
+No, you cannot return more than one datatype. You need to write a seperate function.
+
