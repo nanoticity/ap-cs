@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class MathLibraryRunner{
+public class Runner{
     public static void main(String[] args) {
         MathLibrary lib = new MathLibrary();
         Scanner s = new Scanner(System.in);
