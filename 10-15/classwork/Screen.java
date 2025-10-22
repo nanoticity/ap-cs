@@ -111,7 +111,7 @@ public class Screen extends JPanel implements ActionListener{
       }
       String amt = amountInput.getText();
       try {
-        double val = Double.parseDouble(amt.trim());
+        double val = Double.parseDouble(amt.trim());  
         if (val <= 0) {
           JOptionPane.showMessageDialog(this, "Enter a positive amount");
         } else {
