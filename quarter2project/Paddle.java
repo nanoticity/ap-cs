@@ -1,3 +1,5 @@
+import java.awt.Rectangle;
+
 public class Paddle {
     public int x;
     public int y;
@@ -21,5 +23,9 @@ public class Paddle {
         if (x < 800 - width) {
             x = x + 7;
         }
+    }
+    
+    public Rectangle getRect() {
+        return new Rectangle(x, y, width, height);
     }
 }

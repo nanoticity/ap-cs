@@ -67,17 +67,21 @@ public class Game {
             ball.speedY = ball.speedY * -1;
         }
         
-        if (ball.x + ball.size >= paddle.x && 
-            ball.x <= paddle.x + paddle.width &&
-            ball.y + ball.size >= paddle.y && 
-            ball.y <= paddle.y + paddle.height) {
-            ball.speedY = (level == 1) ? -5 : -7;
+        if ((ball.getRect()).intersects(paddle.getRect())) {
+            int baseSpeed = (level == 1) ? 5 : 7;
             
-            int ballCenter = ball.x + ball.size / 2;
             int paddleCenter = paddle.x + paddle.width / 2;
-            int hitPosition = ballCenter - paddleCenter;
+            int ballCenter = ball.x + ball.size / 2;
+            int offset = ballCenter - paddleCenter;
             
-            ball.speedX = hitPosition / 8;
+            double maxAngle = 60.0;
+            double hitPercent = (double) offset / (paddle.width / 2);
+            hitPercent = Math.max(-1.0, Math.min(1.0, hitPercent));
+            
+            double angle = hitPercent * Math.toRadians(maxAngle);
+            
+            ball.setXDir((int) (baseSpeed * Math.sin(angle)));
+            ball.setYDir((int) (-baseSpeed * Math.cos(angle)));
         }
         
         for (int i = 0; i < bricks.length; i++) {
@@ -87,8 +91,24 @@ public class Game {
                     ball.y + ball.size >= bricks[i].y && 
                     ball.y <= bricks[i].y + bricks[i].height) {
                     bricks[i].destroyed = true;
-                    ball.speedY = ball.speedY * -1;
                     player.score = player.score + 10;
+                    
+                    int ballCenterX = ball.x + ball.size / 2;
+                    int ballCenterY = ball.y + ball.size / 2;
+                    int brickCenterX = bricks[i].x + bricks[i].width / 2;
+                    int brickCenterY = bricks[i].y + bricks[i].height / 2;
+                    
+                    int deltaX = Math.abs(ballCenterX - brickCenterX);
+                    int deltaY = Math.abs(ballCenterY - brickCenterY);
+                    
+                    double widthRatio = (double) deltaX / (bricks[i].width / 2);
+                    double heightRatio = (double) deltaY / (bricks[i].height / 2);
+                    
+                    if (widthRatio > heightRatio) {
+                        ball.speedX = ball.speedX * -1;
+                    } else {
+                        ball.speedY = ball.speedY * -1;
+                    }
                 }
             }
         }
