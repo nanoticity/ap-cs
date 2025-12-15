@@ -144,43 +144,85 @@ public class Screen extends JPanel implements KeyListener {
     }
     
     public void drawMeadowBackground(Graphics g) {
-        // Sky gradient - peaceful blue
         for (int i = 0; i < 400; i++) {
             int blue = 200 + (i / 8);
             g.setColor(new Color(135, 206, Math.min(blue, 255)));
             g.drawLine(0, i, 800, i);
         }
         
-        g.setColor(new Color(50, 150, 50));
+        g.setColor(new Color(34, 139, 34));
         g.fillRect(0, 400, 800, 200);
         
-        g.setColor(new Color(70, 170, 70));
-        for (int i = 0; i < 800; i += 60) {
-            g.fillOval(i, 420, 50, 20);
+        g.setColor(new Color(46, 125, 50));
+        for (int y = 410; y < 600; y += 15) {
+            for (int x = 0; x < 800; x += 8) {
+                int offset = (x % 16 == 0) ? 5 : 0;
+                g.drawLine(x, y + offset, x, y + offset + 8);
+            }
+        }
+        
+        g.setColor(new Color(56, 142, 60));
+        for (int y = 415; y < 600; y += 12) {
+            for (int x = 4; x < 800; x += 10) {
+                g.drawLine(x, y, x, y + 6);
+            }
+        }
+        
+        g.setColor(new Color(27, 94, 32));
+        for (int y = 420; y < 600; y += 18) {
+            for (int x = 2; x < 800; x += 12) {
+                g.drawLine(x, y, x, y + 4);
+            }
         }
         
         g.setColor(new Color(255, 255, 100));
         g.fillOval(650, 50, 80, 80);
+        g.setColor(new Color(255, 255, 150, 100));
+        g.fillOval(640, 40, 100, 100);
     }
     
     public void drawLavaBackground(Graphics g) {
         for (int i = 0; i < 600; i++) {
-            int red = 150 + (i / 6);
-            int green = 30 + (i / 20);
+            int red = 80 + (i / 4);
+            int green = 10 + (i / 15);
             g.setColor(new Color(Math.min(red, 255), green, 0));
             g.drawLine(0, i, 800, i);
         }
         
-        g.setColor(new Color(255, 100, 0, 100));
-        g.fillOval(100, 450, 60, 60);
-        g.fillOval(300, 480, 50, 50);
-        g.fillOval(500, 470, 55, 55);
-        g.fillOval(650, 460, 45, 45);
+        g.setColor(new Color(255, 69, 0, 150));
+        g.fillOval(80, 430, 70, 35);
+        g.fillOval(220, 460, 90, 45);
+        g.fillOval(450, 445, 75, 38);
+        g.fillOval(620, 470, 85, 40);
         
-        g.setColor(new Color(60, 30, 20));
-        g.fillRect(50, 520, 80, 40);
-        g.fillRect(400, 530, 60, 35);
-        g.fillRect(700, 510, 70, 50);
+        g.setColor(new Color(255, 140, 0, 120));
+        g.fillOval(150, 480, 60, 30);
+        g.fillOval(350, 490, 80, 35);
+        g.fillOval(550, 475, 65, 32);
+        g.fillOval(700, 455, 70, 35);
+        
+        g.setColor(new Color(255, 200, 0, 80));
+        for (int x = 50; x < 750; x += 120) {
+            g.fillOval(x, 500, 40, 20);
+        }
+        
+        g.setColor(new Color(139, 69, 19));
+        int[] xRock1 = {60, 90, 130, 120, 50};
+        int[] yRock1 = {540, 520, 530, 560, 555};
+        g.fillPolygon(xRock1, yRock1, 5);
+        
+        int[] xRock2 = {380, 420, 450, 440, 370};
+        int[] yRock2 = {545, 530, 540, 570, 565};
+        g.fillPolygon(xRock2, yRock2, 5);
+        
+        int[] xRock3 = {680, 720, 750, 740, 670};
+        int[] yRock3 = {525, 510, 520, 555, 550};
+        g.fillPolygon(xRock3, yRock3, 5);
+        
+        g.setColor(new Color(101, 67, 33));
+        g.fillOval(70, 545, 20, 15);
+        g.fillOval(390, 550, 25, 18);
+        g.fillOval(690, 530, 22, 16);
     }
     
     public void keyPressed(KeyEvent e) {
@@ -207,6 +249,14 @@ public class Screen extends JPanel implements KeyListener {
         
         if (key == KeyEvent.VK_ENTER && game.allBricksDestroyed() && game.level == 1) {
             game.nextLevel();
+        }
+        
+        if (key == KeyEvent.VK_9) {
+            if (game.level == 1) {
+                game.nextLevel();
+            } else {
+                game.player.lives = 0;
+            }
         }
     }
     

@@ -1,3 +1,6 @@
+import java.net.URL;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 public class Game {
     public int width = 800;
     public int height = 600;
@@ -57,7 +60,19 @@ public class Game {
             }
         }
     }
-    
+
+    private void playSound() {
+        try {
+            URL url = this.getClass().getClassLoader().getResource("pop.wav");
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(url));
+            clip.start();
+        } catch (Exception exc) {
+            exc.printStackTrace(System.out);
+        }
+            
+    }   
+
     public void checkCollisions() {
         if (ball.x <= 0 || ball.x + ball.size >= width) {
             ball.speedX = ball.speedX * -1;
@@ -92,6 +107,8 @@ public class Game {
                     ball.y <= bricks[i].y + bricks[i].height) {
                     bricks[i].destroyed = true;
                     player.score = player.score + 10;
+
+                    playSound();
                     
                     int ballCenterX = ball.x + ball.size / 2;
                     int ballCenterY = ball.y + ball.size / 2;
