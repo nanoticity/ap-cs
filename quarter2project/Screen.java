@@ -67,11 +67,6 @@ public class Screen extends JPanel implements KeyListener {
         g.drawString("Break all the bricks!", 310, 380);
         g.drawString("You have 3 lives", 320, 410);
         
-        g.setFont(new Font("Arial", Font.PLAIN, 14));
-        g.drawString("CREDITS:", 350, 470);
-        g.drawString("Created by: Ari", 330, 490);
-        g.drawString("AP Computer Science Project", 290, 510);
-        
         g.setFont(new Font("Arial", Font.BOLD, 24));
         g.drawString("Press ENTER to Start", 280, 560);
     }
