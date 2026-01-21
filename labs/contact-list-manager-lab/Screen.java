@@ -11,18 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-/**
- * Screen panel for the contact list manager.
- *
- * - Uses a dynamic List<Contact> so contacts can be added at runtime.
- * - Provides a single search field and five search buttons (first, last,
- *   username, domain, extension).
- * - Adds new contacts through a sequence of JOptionPane input dialogs.
- * - Draws the full contact list on the left and search results on the right.
- *
- * Note: this class expects a Contact class with getFirstName(), getLastName(),
- * and getEmail() methods.
- */
 public class Screen extends JPanel implements ActionListener {
 
   private static final long serialVersionUID = 1L;
@@ -32,21 +20,16 @@ public class Screen extends JPanel implements ActionListener {
   private String searchQuery = "";
   private String searchMode = "";
   private List<Contact> contacts;
-  private List<Integer> results; // indices into contacts for matches
+  private List<Integer> results;
 
   public Screen() {
-    // keep using manual layout to match existing drawing code but avoid overlaps
     setLayout(null);
 
-    // Search field and placeholder
     t1 = new JTextField(20);
     t1.setBounds(50, 50, 350, 30);
-    // TextPrompt is optional; if not present it won't compile — ensure class exists
     try {
       new TextPrompt("Enter your search term", t1);
-    } catch (Throwable ignore) {
-      // If TextPrompt is not available, ignore — field will just be plain.
-    }
+    } catch (Throwable ignore) { }
     add(t1);
 
     int bx = 420;
@@ -75,13 +58,11 @@ public class Screen extends JPanel implements ActionListener {
     bExt.addActionListener(this);
     add(bExt);
 
-    // New contact button placed below the search field to avoid overlap
     bNew = new JButton("New Contact");
     bNew.setBounds(50, 90, 140, 30);
     bNew.addActionListener(this);
     add(bNew);
 
-    // Initialize dynamic contact list
     contacts = new ArrayList<>();
     results = new ArrayList<>();
 
@@ -103,13 +84,11 @@ public class Screen extends JPanel implements ActionListener {
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
-    // background
     g.setColor(Color.white);
     g.fillRect(0, 0, getWidth(), getHeight());
 
     Font font = new Font("Arial", Font.PLAIN, 18);
 
-    // Left: full contacts list
     g.setColor(Color.black);
     g.setFont(font);
     g.drawString("Contacts:", 50, 160);
@@ -129,7 +108,6 @@ public class Screen extends JPanel implements ActionListener {
       g.drawString(line, 50, startY + i * 20);
     }
 
-    // Right: search results
     g.setFont(font);
     g.setColor(Color.MAGENTA.darker());
     g.drawString(
@@ -166,11 +144,6 @@ public class Screen extends JPanel implements ActionListener {
     }
   }
 
-  /**
-   * Prompts the user for a new contact's first name, last name and email using
-   * JOptionPane input dialogs. Validates input and appends the new Contact to
-   * the dynamic list.
-   */
   private void addNewContact() {
     String first = JOptionPane.showInputDialog(
       this,
@@ -178,7 +151,7 @@ public class Screen extends JPanel implements ActionListener {
       "New Contact",
       JOptionPane.PLAIN_MESSAGE
     );
-    if (first == null) return; // user cancelled
+    if (first == null) return;
     first = first.trim();
     if (first.isEmpty()) {
       JOptionPane.showMessageDialog(
@@ -231,14 +204,11 @@ public class Screen extends JPanel implements ActionListener {
       return;
     }
 
-    // All validations passed — add contact
     contacts.add(new Contact(first, last, email));
 
-    // Clear previous results when a new contact is added
     results.clear();
     searchMode = "";
 
-    // repaint to show the new contact
     repaint();
   }
 
@@ -247,7 +217,6 @@ public class Screen extends JPanel implements ActionListener {
     Object src = e.getSource();
     searchQuery = t1.getText().trim().toLowerCase();
 
-    // Clear previous results
     results.clear();
 
     if (src == bFirst) {
