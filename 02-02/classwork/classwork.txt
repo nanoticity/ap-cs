@@ -1,0 +1,113 @@
+import java.util.ArrayList;
+
+class Diagram {
+
+	public void demo1(int x, int y) {
+		int t = x;
+		x = y;
+		y = t;
+	}
+
+	public void demo2(String a, String b) {
+		String t = b;
+		b = a;
+		a = "java";
+	}
+
+	public void demo3(MyClass a, MyClass b) {
+		a = new MyClass(0);
+		b.changeA(0);
+
+	}
+
+	public void changeB(ArrayList<String> test) {
+		test.set(0, "cat");
+	}
+}
+
+class MyClass {
+	private int a;
+
+	public MyClass(int a) {
+		this.a = a;
+
+	}
+
+	public void changeA(int input) {
+		this.a = input;
+	}
+
+	public String toString() {
+		return "" + a;
+	}
+
+}
+
+public class Runner {
+	public static void main(String args[]) {
+
+		int a;
+		int b;
+
+		String text1;
+		String text2;
+
+		MyClass obj1;
+		MyClass obj2;
+
+		Diagram myObject = new Diagram();
+
+		// Diagram 1 - Look at slide 5 for an example
+		// There should be no arrows for diagram 1.
+		// ANSWER: 3 : 6 and 3 : 6, because ints are primitive datatypes and can't be changed
+		System.out.println("Diagram 1");
+		a = 3;
+		b = 6;
+
+		System.out.println(a + " : " + b);
+		myObject.demo1(a, b);
+		System.out.println(a + " : " + b);
+
+		System.out.println("\n");
+
+		// Diagram 2
+		// Look at slide 15
+		// ["hello", "World"], then ["cat", "World"] because ArrayLists can be changed
+		System.out.println("Diagram 2");
+		ArrayList<String> myText = new ArrayList<String>();
+		myText.add("hello");
+		myText.add("World");
+
+		System.out.println(myText);
+		myObject.changeB(myText);
+		System.out.println(myText);
+
+		System.out.println("\n");
+
+		// Diagram 3
+		// 99 99, 99 0 because MyClass objects can have their internal state changed
+		System.out.println("Diagram 3");
+		obj1 = new MyClass(99);
+		obj2 = new MyClass(99);
+
+		System.out.println(obj1);
+		System.out.println(obj2);
+		myObject.demo3(obj1, obj2);
+		System.out.println();
+		System.out.println(obj1);
+		System.out.println(obj2);
+
+		System.out.println("\n");
+
+		// Diagram 4
+		// cat : dog, then cat : java because Strings are primitive
+		System.out.println("Diagram 4");
+		text1 = "cat";
+		text2 = "dog";
+
+		System.out.println(text1 + " : " + text2);
+		myObject.demo2(text1, text2);
+		System.out.println(text1 + " : " + text2);
+
+	}
+}
