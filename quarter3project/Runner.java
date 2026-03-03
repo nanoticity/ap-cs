@@ -10,7 +10,5 @@ public class Runner {
     frame.pack();
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
-
-    table.startGame();
   }
 }
