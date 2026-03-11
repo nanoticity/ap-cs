@@ -12,6 +12,7 @@ public class Table extends JPanel implements ActionListener, KeyListener {
   int currentPlayer;
   int roundNum;
   int[] bets;
+  int[] pairPlusBets;
   boolean[] folded;
   int[] money;
   boolean dealt;
@@ -19,10 +20,13 @@ public class Table extends JPanel implements ActionListener, KeyListener {
   String resultMsg;
   int[] wins;
   String bonusMsg;
+  String ppMsg;
 
   JButton startBtn;
   JButton betUpBtn;
   JButton betDownBtn;
+  JButton ppUpBtn;
+  JButton ppDownBtn;
   JButton dealBtn;
   JButton stayBtn;
   JButton foldBtn;
@@ -39,6 +43,9 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     bets = new int[2];
     bets[0] = 10;
     bets[1] = 10;
+    pairPlusBets = new int[2];
+    pairPlusBets[0] = 0;
+    pairPlusBets[1] = 0;
     folded = new boolean[2];
     money = new int[2];
     money[0] = 100;
@@ -46,20 +53,25 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     wins = new int[2];
     resultMsg = "";
     bonusMsg = "";
+    ppMsg = "";
 
-    startBtn = makeBtn("START GAME", 375, 440, 250, 48);
-    betUpBtn = makeBtn("+ $5", 610, 250, 80, 42);
-    betDownBtn = makeBtn("- $5", 310, 250, 80, 42);
-    dealBtn = makeBtn("DEAL CARDS", 375, 440, 250, 48);
-    stayBtn = makeBtn("STAY IN", 230, 440, 210, 48);
-    foldBtn = makeBtn("FOLD", 560, 440, 210, 48);
-    continueBtn = makeBtn("CONTINUE", 375, 440, 250, 48);
-    nextBtn = makeBtn("NEXT ROUND", 275, 440, 200, 48);
-    endBtn = makeBtn("END GAME", 525, 440, 200, 48);
+    startBtn   = makeBtn("START GAME",  375, 460, 250, 48);
+    betUpBtn   = makeBtn("+ $5",        660, 230, 80,  42);
+    betDownBtn = makeBtn("- $5",        260, 230, 80,  42);
+    ppUpBtn    = makeBtn("+ $5",        660, 310, 80,  42);
+    ppDownBtn  = makeBtn("- $5",        260, 310, 80,  42);
+    dealBtn    = makeBtn("DEAL CARDS",  375, 400, 250, 48);
+    stayBtn    = makeBtn("STAY IN",     230, 460, 210, 48);
+    foldBtn    = makeBtn("FOLD",        560, 460, 210, 48);
+    continueBtn = makeBtn("CONTINUE",  375, 460, 250, 48);
+    nextBtn    = makeBtn("NEXT ROUND",  275, 460, 200, 48);
+    endBtn     = makeBtn("END GAME",    525, 460, 200, 48);
 
     add(startBtn);
     add(betUpBtn);
     add(betDownBtn);
+    add(ppUpBtn);
+    add(ppDownBtn);
     add(dealBtn);
     add(stayBtn);
     add(foldBtn);
@@ -70,6 +82,8 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     startBtn.addActionListener(this);
     betUpBtn.addActionListener(this);
     betDownBtn.addActionListener(this);
+    ppUpBtn.addActionListener(this);
+    ppDownBtn.addActionListener(this);
     dealBtn.addActionListener(this);
     stayBtn.addActionListener(this);
     foldBtn.addActionListener(this);
@@ -97,7 +111,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     return new Dimension(1000, 540);
   }
 
-  // plays a wav file
   public void playSound(String filename) {
     try {
       Clip clip = AudioSystem.getClip();
@@ -110,7 +123,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     super.paintComponent(g);
 
     if (phase.equals("START")) {
-      // title screen
       g.setColor(new Color(255, 215, 0));
       g.setFont(new Font("Arial", Font.BOLD, 56));
       g.drawString("3 CARD POKER", 255, 105);
@@ -130,7 +142,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       g.drawString("Rankings: High Card < Pair < Flush < Straight < Three of a Kind < Straight Flush", 100, 370);
 
     } else if (phase.equals("BETTING")) {
-      // betting screen
       g.setColor(new Color(255, 215, 0));
       g.setFont(new Font("Arial", Font.BOLD, 48));
       g.drawString("PLAYER " + (currentPlayer + 1), 60, 85);
@@ -140,15 +151,25 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       g.drawString("Round " + (roundNum + 1), 60, 135);
       g.drawString("Balance: $" + money[currentPlayer], 60, 175);
 
+      g.setColor(new Color(255, 215, 0));
+      g.setFont(new Font("Arial", Font.BOLD, 22));
+      g.drawString("Ante Bet:", 420, 214);
+      g.setColor(Color.WHITE);
       g.setFont(new Font("Arial", Font.BOLD, 34));
-      g.drawString("Bet:  $" + bets[currentPlayer], 400, 262);
+      g.drawString("$" + bets[currentPlayer], 470, 255);
 
-      g.setFont(new Font("Arial", Font.PLAIN, 16));
+      g.setColor(new Color(100, 255, 100));
+      g.setFont(new Font("Arial", Font.BOLD, 22));
+      g.drawString("Pair Plus (optional):", 330, 298);
+      g.setColor(Color.WHITE);
+      g.setFont(new Font("Arial", Font.BOLD, 34));
+      g.drawString("$" + pairPlusBets[currentPlayer], 470, 335);
+
+      g.setFont(new Font("Arial", Font.PLAIN, 15));
       g.setColor(new Color(180, 230, 180));
-      g.drawString("Use the buttons to set your bet, then press DEAL CARDS.", 270, 380);
+      g.drawString("Pair Plus pays out regardless of dealer's hand (Pair=1x, Flush=4x, Straight=6x, Trips=30x, SF=40x)", 60, 385);
 
     } else if (phase.equals("CARDS")) {
-      // showing hand
       g.setColor(new Color(255, 215, 0));
       g.setFont(new Font("Arial", Font.BOLD, 42));
       g.drawString("PLAYER " + (currentPlayer + 1), 60, 72);
@@ -165,7 +186,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       g.setFont(new Font("Arial", Font.BOLD, 22));
       g.drawString("Hand: " + name, 600, 100);
 
-      // show bonus info if they have a pair or better
       if (handType >= 1) {
         int bonus = game.getBonus(handType) * bets[currentPlayer];
         g.setColor(new Color(100, 255, 100));
@@ -173,7 +193,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
         g.drawString("Bonus payout: +$" + bonus, 600, 125);
       }
 
-      // draw the cards using CardGame
       game.drawHand(g, hand, 500, 145);
 
       g.setColor(new Color(180, 230, 180));
@@ -181,7 +200,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       g.drawString("Choose STAY IN or FOLD.", 395, 410);
 
     } else if (phase.equals("TRANSITION")) {
-      // pass screen between players
       g.setColor(Color.WHITE);
       g.setFont(new Font("Arial", Font.BOLD, 42));
       g.drawString("PASS THE SCREEN", 265, 215);
@@ -189,7 +207,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       g.drawString("Player " + (currentPlayer + 1) + ", press CONTINUE when ready.", 255, 275);
 
     } else if (phase.equals("RESULT")) {
-      // round result
       g.setColor(new Color(255, 215, 0));
       g.setFont(new Font("Arial", Font.BOLD, 42));
       g.drawString("ROUND " + roundNum + " RESULT", 280, 70);
@@ -213,13 +230,19 @@ public class Table extends JPanel implements ActionListener, KeyListener {
         g.drawString(bonusMsg, (1000 - bw) / 2, 285);
       }
 
+      if (ppMsg.length() > 0) {
+        g.setColor(new Color(100, 220, 255));
+        g.setFont(new Font("Arial", Font.BOLD, 18));
+        int pw = g.getFontMetrics().stringWidth(ppMsg);
+        g.drawString(ppMsg, (1000 - pw) / 2, 315);
+      }
+
       g.setColor(Color.WHITE);
       g.setFont(new Font("Arial", Font.PLAIN, 20));
-      g.drawString("Player 1 Balance: $" + money[0], 350, 330);
-      g.drawString("Player 2 Balance: $" + money[1], 350, 365);
+      g.drawString("Player 1 Balance: $" + money[0], 350, 355);
+      g.drawString("Player 2 Balance: $" + money[1], 350, 390);
 
     } else if (phase.equals("ENDGAME")) {
-      // final screen
       g.setColor(new Color(255, 215, 0));
       g.setFont(new Font("Arial", Font.BOLD, 52));
       g.drawString("GAME OVER", 310, 80);
@@ -234,7 +257,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       g.drawString("Player 2 Final Balance: $" + money[1], 310, 290);
       g.drawString("Player 2 Rounds Won: " + wins[1], 310, 320);
 
-      // figure out overall winner
       String winner = "IT'S A TIE!";
       if (money[0] > money[1])
         winner = "PLAYER 1 WINS!";
@@ -246,9 +268,7 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       int tw = g.getFontMetrics().stringWidth(winner);
       g.drawString(winner, (1000 - tw) / 2, 400);
 
-      g.setColor(new Color(180, 230, 180));
-      g.setFont(new Font("Arial", Font.PLAIN, 16));
-      g.drawString("Press START GAME to play again.", 375, 470);
+
     }
   }
 
@@ -279,7 +299,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       return;
     }
 
-    // award bonus payouts
     int bonus1 = game.getBonus(game.evaluate(game.hand1)[0]) * bets[0];
     int bonus2 = game.getBonus(game.evaluate(game.hand2)[0]) * bets[1];
     if (bonus1 > 0)
@@ -295,7 +314,31 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       bonusMsg = b;
     }
 
-    // compare hands
+    ppMsg = "";
+    if (pairPlusBets[0] > 0) {
+      int pp1Mult = game.getPairPlusBonus(game.evaluate(game.hand1)[0]);
+      if (pp1Mult > 0) {
+        int pp1Win = pairPlusBets[0] * pp1Mult;
+        money[0] += pp1Win;
+        ppMsg += "P1 Pair Plus +$" + pp1Win;
+      } else {
+        money[0] -= pairPlusBets[0];
+        ppMsg += "P1 Pair Plus -$" + pairPlusBets[0];
+      }
+    }
+    if (pairPlusBets[1] > 0) {
+      int pp2Mult = game.getPairPlusBonus(game.evaluate(game.hand2)[0]);
+      if (ppMsg.length() > 0) ppMsg += "   ";
+      if (pp2Mult > 0) {
+        int pp2Win = pairPlusBets[1] * pp2Mult;
+        money[1] += pp2Win;
+        ppMsg += "P2 Pair Plus +$" + pp2Win;
+      } else {
+        money[1] -= pairPlusBets[1];
+        ppMsg += "P2 Pair Plus -$" + pairPlusBets[1];
+      }
+    }
+
     int winner = game.compare();
     if (winner == 1) {
       money[0] += bets[1];
@@ -313,6 +356,11 @@ public class Table extends JPanel implements ActionListener, KeyListener {
       resultMsg = "It's a tie - no payout!";
       playSound("lose.wav");
     }
+
+    if (money[0] <= 0)
+      resultMsg += "  |  Player 1 is out of money!";
+    else if (money[1] <= 0)
+      resultMsg += "  |  Player 2 is out of money!";
   }
 
   public void actionPerformed(ActionEvent e) {
@@ -324,13 +372,23 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     }
 
     if (src == betUpBtn) {
-      if (bets[currentPlayer] < money[currentPlayer])
+      if (bets[currentPlayer] + 5 + pairPlusBets[currentPlayer] <= money[currentPlayer])
         bets[currentPlayer] += 5;
     }
 
     if (src == betDownBtn) {
       if (bets[currentPlayer] > 5)
         bets[currentPlayer] -= 5;
+    }
+
+    if (src == ppUpBtn) {
+      if (bets[currentPlayer] + pairPlusBets[currentPlayer] + 5 <= money[currentPlayer])
+        pairPlusBets[currentPlayer] += 5;
+    }
+
+    if (src == ppDownBtn) {
+      if (pairPlusBets[currentPlayer] >= 5)
+        pairPlusBets[currentPlayer] -= 5;
     }
 
     if (src == dealBtn) {
@@ -361,18 +419,25 @@ public class Table extends JPanel implements ActionListener, KeyListener {
 
     if (src == continueBtn) {
       bets[currentPlayer] = Math.min(10, money[currentPlayer]);
+      pairPlusBets[currentPlayer] = 0;
       phase = "BETTING";
     }
 
     if (src == nextBtn) {
-      currentPlayer = 0;
-      dealt = false;
-      turnsDone = 0;
-      bets[0] = Math.min(10, money[0]);
-      bets[1] = Math.min(10, money[1]);
-      folded[0] = false;
-      folded[1] = false;
-      phase = "BETTING";
+      if (money[0] <= 0 || money[1] <= 0) {
+        phase = "ENDGAME";
+      } else {
+        currentPlayer = 0;
+        dealt = false;
+        turnsDone = 0;
+        bets[0] = Math.min(10, money[0]);
+        bets[1] = Math.min(10, money[1]);
+        pairPlusBets[0] = 0;
+        pairPlusBets[1] = 0;
+        folded[0] = false;
+        folded[1] = false;
+        phase = "BETTING";
+      }
     }
 
     if (src == endBtn) {
@@ -384,7 +449,6 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     requestFocusInWindow();
   }
 
-  // cheat key - p progresses through screens
   public void keyPressed(KeyEvent e) {
     char key = e.getKeyChar();
 
@@ -436,6 +500,8 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     dealt = false;
     bets[0] = 10;
     bets[1] = 10;
+    pairPlusBets[0] = 0;
+    pairPlusBets[1] = 0;
     folded[0] = false;
     folded[1] = false;
     money[0] = 100;
@@ -444,6 +510,7 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     wins[1] = 0;
     resultMsg = "";
     bonusMsg = "";
+    ppMsg = "";
     game = new CardGame();
   }
 
@@ -451,6 +518,8 @@ public class Table extends JPanel implements ActionListener, KeyListener {
     startBtn.setVisible(phase.equals("START") || phase.equals("ENDGAME"));
     betUpBtn.setVisible(phase.equals("BETTING"));
     betDownBtn.setVisible(phase.equals("BETTING"));
+    ppUpBtn.setVisible(phase.equals("BETTING"));
+    ppDownBtn.setVisible(phase.equals("BETTING"));
     dealBtn.setVisible(phase.equals("BETTING"));
     stayBtn.setVisible(phase.equals("CARDS"));
     foldBtn.setVisible(phase.equals("CARDS"));
