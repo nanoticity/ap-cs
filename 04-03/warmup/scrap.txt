@@ -1,0 +1,19 @@
+mystery 9
+    return 9+mystery(7)
+        return 7+mystery(5)
+            return 5+mystery(3)
+                return 3+mystery(1)
+                    return 1+m(-1)
+                        return 0
+
+4
+9
+16
+**25**
+D
+
+
+mystery(123456)
+    mystery(12345)
+6
+B, the stack unwinds in the other way, from deep to shallow in the stack, so therefore it is 123456
